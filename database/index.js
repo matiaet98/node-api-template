@@ -24,3 +24,22 @@ exports.handleConnection = function (request, response, callback) {
             callback(request, response, connection);
         });
 }
+
+exports.release = function (connection) {
+    connection.close(
+        function (err) {
+            if (err) {
+                console.error(err.message);
+            }
+        });
+}
+
+exports.close = function (connection, resultSet) {
+    resultSet.close(
+        function (err) {
+            if (err) {
+                console.error(err.message);
+            }
+            exports.release(connection);
+        });
+}
