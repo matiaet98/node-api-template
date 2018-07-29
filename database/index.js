@@ -1,5 +1,6 @@
 var exports = module.exports = {};
 var config = require('./config');
+var oracledb = require('oracledb');
 
 exports.handleConnection = function (request, response, callback) {
     oracledb.getConnection({
@@ -41,5 +42,17 @@ exports.close = function (connection, resultSet) {
                 console.error(err.message);
             }
             exports.release(connection);
+        });
+}
+
+exports.fetchRows = function (connection, resultSet, numRows, allRows) {
+    resultSet.getRow(
+        function (err, row) {
+            if (row) {
+                allRows.push(row);
+                exports.fetchRows(connection, resultSet, numRows, allRows);
+                return;
+            }
+            exports.close(connection, resultSet);
         });
 }
