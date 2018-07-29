@@ -14,7 +14,6 @@ END;
 */
 
 router.get('/', function (req, res, next) {
-  console.log("here");
   database.handleConnection(req, res, function (req, res, conn) {
     var bindvars = {
       id: req.params.id,
